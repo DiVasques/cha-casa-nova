@@ -2,11 +2,11 @@ import 'package:cha_casa_nova/ui/routers/generic_router.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ChaDeCasaNova());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class ChaDeCasaNova extends StatelessWidget {
+  const ChaDeCasaNova({super.key});
 
   // This widget is the root of your application.
   @override
