@@ -15,16 +15,22 @@ class ChaDeCasaNova extends StatelessWidget {
         title: 'Chá de Casa Nova',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          // This is the theme of your application.
-          //
-          // Try running your application with "flutter run". You'll see the
-          // application has a blue toolbar. Then, without quitting the app, try
-          // changing the primarySwatch below to Colors.green and then invoke
-          // "hot reload" (press "r" in the console where you ran "flutter run",
-          // or simply save your changes to "hot reload" in a Flutter IDE).
-          // Notice that the counter didn't reset back to zero; the application
-          // is not restarted.
-          primarySwatch: Colors.blue,
+          fontFamily: 'Montserrat',
+          primarySwatch: const MaterialColor(
+            0xFF2D7565,
+            <int, Color>{
+              50: Color(0xFFaaf4e0),
+              100: Color(0xFF7ec7b4),
+              200: Color(0xFF61a997),
+              300: Color(0xFF438b7a),
+              400: Color(0xFF2D7565),
+              500: Color(0xFF186555),
+              600: Color(0xFF015848),
+              700: Color(0xFF004d3f),
+              800: Color(0xFF004436),
+              900: Color(0xFF003225)
+            },
+          ),
         ),
         onGenerateRoute: GenericRouter.generateRoute,
         initialRoute: GenericRouter.homeRoute);
