@@ -7,6 +7,7 @@ import 'package:cha_casa_nova/ui/widgets/base_scaffold.dart';
 import 'package:cha_casa_nova/ui/widgets/icon_text_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -90,6 +91,17 @@ class HomePage extends StatelessWidget {
           color: AppColors.appDarkGreen,
           fontWeight: FontWeight.bold,
         ),
+      ),
+      const SizedBox(
+        height: 50,
+      ),
+      IconTextButton(
+        icon: FontAwesomeIcons.info,
+        text: 'Informações',
+        onPressed: () {
+          Navigator.pushNamed(context, GenericRouter.infoRoute,
+              arguments: true);
+        },
       ),
       const SizedBox(
         height: 50,
