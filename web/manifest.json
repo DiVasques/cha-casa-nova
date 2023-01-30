@@ -1,11 +1,11 @@
 {
-    "name": "cha_casa_nova",
-    "short_name": "cha_casa_nova",
+    "name": "Chá de Casa Nova",
+    "short_name": "Chá de Casa Nova",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Chá de Casa Nova - Diogo e Bebel",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
