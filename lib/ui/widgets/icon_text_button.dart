@@ -1,19 +1,24 @@
 import 'package:cha_casa_nova/ui/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
-class SignInButton extends StatelessWidget {
+class IconTextButton extends StatelessWidget {
   final IconData icon;
   final String? text;
   final void Function()? onPressed;
-  const SignInButton(
-      {super.key, required this.icon, this.text, this.onPressed});
+  final bool dense;
+  const IconTextButton(
+      {super.key,
+      required this.icon,
+      this.text,
+      this.onPressed,
+      this.dense = false});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onPressed,
       child: Container(
-        width: 250,
+        width: dense ? null : 250,
         padding: const EdgeInsets.symmetric(
           horizontal: 20,
           vertical: 10,
@@ -23,7 +28,8 @@ class SignInButton extends StatelessWidget {
           color: AppColors.appDarkGreen,
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: dense ? MainAxisSize.min : MainAxisSize.max,
           children: <Widget>[
             Icon(
               icon,
