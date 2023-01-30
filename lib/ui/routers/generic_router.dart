@@ -1,15 +1,21 @@
-import 'package:cha_casa_nova/ui/views/home.dart';
+import 'package:cha_casa_nova/ui/views/home_page.dart';
+import 'package:cha_casa_nova/ui/views/login_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class GenericRouter {
   static const String homeRoute = '/home';
+  static const String loginRoute = '/login';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     WidgetBuilder builder;
     switch (settings.name) {
+      case loginRoute:
+        builder = (BuildContext _) => LoginPage();
+        break;
       case homeRoute:
         builder = (BuildContext _) =>
-            Home(email: settings.arguments as String? ?? 'teste@teste.com');
+            HomePage(userCredential: settings.arguments as UserCredential);
         break;
       default:
         return MaterialPageRoute<dynamic>(

@@ -17,27 +17,28 @@ class ChaDeCasaNova extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Chá de Casa Nova',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          fontFamily: 'Montserrat',
-          primarySwatch: const MaterialColor(
-            0xFF2D7565,
-            <int, Color>{
-              50: Color(0xFFaaf4e0),
-              100: Color(0xFF7ec7b4),
-              200: Color(0xFF61a997),
-              300: Color(0xFF438b7a),
-              400: Color(0xFF2D7565),
-              500: Color(0xFF186555),
-              600: Color(0xFF015848),
-              700: Color(0xFF004d3f),
-              800: Color(0xFF004436),
-              900: Color(0xFF003225)
-            },
-          ),
+      title: 'Chá de Casa Nova',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        fontFamily: 'Montserrat',
+        primarySwatch: const MaterialColor(
+          0xFF2D7565,
+          <int, Color>{
+            50: Color(0xFFaaf4e0),
+            100: Color(0xFF7ec7b4),
+            200: Color(0xFF61a997),
+            300: Color(0xFF438b7a),
+            400: Color(0xFF2D7565),
+            500: Color(0xFF186555),
+            600: Color(0xFF015848),
+            700: Color(0xFF004d3f),
+            800: Color(0xFF004436),
+            900: Color(0xFF003225)
+          },
         ),
-        onGenerateRoute: GenericRouter.generateRoute,
-        initialRoute: GenericRouter.homeRoute);
+      ),
+      onGenerateRoute: GenericRouter.generateRoute,
+      initialRoute: GenericRouter.loginRoute,
+    );
   }
 }
