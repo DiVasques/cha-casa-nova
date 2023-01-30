@@ -9,10 +9,16 @@ class GenericRouter {
   static const String loginRoute = '/login';
   static const String infoRoute = '/info';
 
+  static const List<String> authenticatedRoutes = <String>[
+    homeRoute,
+    infoRoute
+  ];
+
   static Route<dynamic> generateRoute(RouteSettings settings) {
     WidgetBuilder builder;
 
-    if (settings.arguments == null) {
+    if (authenticatedRoutes.contains(settings.name) &&
+        settings.arguments == null) {
       RouteSettings redirectSettings = const RouteSettings(name: loginRoute);
       builder = (BuildContext _) => LoginPage();
       return MaterialPageRoute<dynamic>(
