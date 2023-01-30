@@ -9,8 +9,22 @@ class GenericRouter {
   static const String loginRoute = '/login';
   static const String infoRoute = '/info';
 
+  static const List<String> authenticatedRoutes = <String>[
+    homeRoute,
+    infoRoute
+  ];
+
   static Route<dynamic> generateRoute(RouteSettings settings) {
     WidgetBuilder builder;
+
+    if (authenticatedRoutes.contains(settings.name) &&
+        settings.arguments == null) {
+      RouteSettings redirectSettings = const RouteSettings(name: loginRoute);
+      builder = (BuildContext _) => LoginPage();
+      return MaterialPageRoute<dynamic>(
+          builder: builder, settings: redirectSettings);
+    }
+
     switch (settings.name) {
       case loginRoute:
         builder = (BuildContext _) => LoginPage();
@@ -28,7 +42,7 @@ class GenericRouter {
           builder: (_) {
             return Scaffold(
               body: Center(
-                child: Text('Rota não definida para ${settings.name}'),
+                child: Text('404: Rota não definida para ${settings.name}'),
               ),
             );
           },
