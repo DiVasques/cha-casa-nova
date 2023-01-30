@@ -15,7 +15,7 @@ class BaseScaffold extends Scaffold {
               children: <Widget>[
                 Positioned.fill(
                   child: Image.asset(
-                    'images/base_grid_invert.png',
+                    'assets/images/base_grid_invert.png',
                     repeat: ImageRepeat.repeat,
                   ),
                 ),
@@ -57,7 +57,7 @@ class BaseScaffold extends Scaffold {
                           height: 15,
                         ),
                         Container(
-                          constraints: const BoxConstraints(minHeight: 400),
+                          constraints: const BoxConstraints(minHeight: 300),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(20),

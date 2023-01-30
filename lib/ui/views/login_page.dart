@@ -4,7 +4,7 @@ import 'package:cha_casa_nova/ui/controllers/login_controller.dart';
 import 'package:cha_casa_nova/ui/routers/generic_router.dart';
 import 'package:cha_casa_nova/ui/utils/app_colors.dart';
 import 'package:cha_casa_nova/ui/widgets/base_scaffold.dart';
-import 'package:cha_casa_nova/ui/widgets/sign_in_button.dart';
+import 'package:cha_casa_nova/ui/widgets/icon_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -49,7 +49,7 @@ class LoginPage extends StatelessWidget {
     if (loginController.state == ViewState.busy) {
       return <Widget>[
         const SizedBox(
-          height: 20,
+          height: 10,
         ),
         SizedBox(
           height: 40,
@@ -62,7 +62,7 @@ class LoginPage extends StatelessWidget {
     }
 
     return <Widget>[
-      SignInButton(
+      IconTextButton(
         icon: FontAwesomeIcons.google,
         text: 'Entrar com Google',
         onPressed: () {
@@ -74,16 +74,6 @@ class LoginPage extends StatelessWidget {
                   arguments: result.userCredential);
             }
           });
-        },
-      ),
-      const SizedBox(
-        height: 20,
-      ),
-      SignInButton(
-        icon: FontAwesomeIcons.facebook,
-        text: 'Entrar com Facebook',
-        onPressed: () {
-          debugPrint('facebook');
         },
       ),
       const SizedBox(

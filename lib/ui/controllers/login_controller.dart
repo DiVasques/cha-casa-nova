@@ -13,7 +13,6 @@ class LoginController extends BaseController {
       setState(ViewState.error);
       return authResult;
     }
-    setState(ViewState.idle);
     return authResult;
   }
 }
