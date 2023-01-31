@@ -89,6 +89,7 @@ class HomePage extends StatelessWidget {
       ),
       Text(
         'Você foi convidado à nossa baguncinha',
+        textAlign: TextAlign.center,
         style: TextStyle(
           color: AppColors.appDarkGreen,
           fontWeight: FontWeight.bold,
@@ -113,6 +114,17 @@ class HomePage extends StatelessWidget {
         text: 'Informações',
         onPressed: () {
           Navigator.pushNamed(context, GenericRouter.infoRoute,
+              arguments: true);
+        },
+      ),
+      const SizedBox(
+        height: 20,
+      ),
+      IconTextButton(
+        icon: FontAwesomeIcons.basketShopping,
+        text: 'Listinha',
+        onPressed: () {
+          Navigator.pushNamed(context, GenericRouter.shopRoute,
               arguments: true);
         },
       ),

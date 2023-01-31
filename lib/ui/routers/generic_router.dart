@@ -1,17 +1,20 @@
 import 'package:cha_casa_nova/ui/views/home_page.dart';
 import 'package:cha_casa_nova/ui/views/info_page.dart';
 import 'package:cha_casa_nova/ui/views/login_page.dart';
+import 'package:cha_casa_nova/ui/views/shop_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class GenericRouter {
   static const String homeRoute = '/home';
-  static const String loginRoute = '/login';
+  static const String loginRoute = '/';
   static const String infoRoute = '/info';
+  static const String shopRoute = '/shop';
 
   static const List<String> authenticatedRoutes = <String>[
     homeRoute,
-    infoRoute
+    infoRoute,
+    shopRoute,
   ];
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -37,16 +40,12 @@ class GenericRouter {
         builder = (BuildContext _) =>
             InfoPage(authenticated: settings.arguments as bool);
         break;
+      case shopRoute:
+        builder = (BuildContext _) =>
+            ShopPage(authenticated: settings.arguments as bool);
+        break;
       default:
-        return MaterialPageRoute<dynamic>(
-          builder: (_) {
-            return Scaffold(
-              body: Center(
-                child: Text('404: Rota não definida para ${settings.name}'),
-              ),
-            );
-          },
-        );
+        builder = (BuildContext _) => LoginPage();
     }
     return MaterialPageRoute<dynamic>(builder: builder, settings: settings);
   }
