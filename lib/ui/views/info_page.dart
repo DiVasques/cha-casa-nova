@@ -156,6 +156,10 @@ class InfoPage extends StatelessWidget {
                       mapObjects: MapObjects(
                         markers: <Marker>{
                           const Marker(
+                            infoWindow: InfoWindow(
+                              title: 'Casa Diogo e Bebel',
+                              snippet: 'Rua Lincoln Neves Pinto, 140',
+                            ),
                             markerId: MarkerId('home'),
                             position: LatLng(
                               -22.916805367375932,
