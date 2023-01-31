@@ -7,8 +7,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
 class HomeController extends BaseController {
-  final firebase_auth.UserCredential userCredential;
-  HomeController({required this.userCredential}) {
+  final firebase_auth.User firebaseUser;
+  HomeController({required this.firebaseUser}) {
     setState(ViewState.busy);
     getUser();
   }
@@ -23,8 +23,8 @@ class HomeController extends BaseController {
   Future<void> getUser() async {
     setState(ViewState.busy);
     Result result = await _homeRepository.getUser(
-      email: userCredential.user!.email!,
-      name: userCredential.user!.displayName!,
+      email: firebaseUser.email!,
+      name: firebaseUser.displayName!,
     );
 
     if (result.status) {
@@ -37,7 +37,7 @@ class HomeController extends BaseController {
 
   Future<Result> confirmPresence(bool confirmed) async {
     Result result = await _homeRepository.confirmPresence(
-      email: userCredential.user!.email!,
+      email: firebaseUser.email!,
       confirmed: !confirmed,
     );
 

@@ -6,13 +6,13 @@ class AuthenticationServices {
   static String failedToCreateUserCode = 'ERROR_FAILED_TO_CREATE_USER';
   static String failedToCreateUserMessage = 'Falha ao criar usuário. Codigo: ';
 
-  static String? isUserAuthenticated() {
+  static firebase_auth.User? isUserAuthenticated() {
     firebase_auth.User? firebaseUser =
         firebase_auth.FirebaseAuth.instance.currentUser;
     if (firebaseUser == null) {
       return null;
     }
-    return firebaseUser.email;
+    return firebaseUser;
   }
 
   static Future<AuthResult> googleSingIn() async {
