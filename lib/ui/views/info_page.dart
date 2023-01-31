@@ -3,12 +3,15 @@ import 'package:cha_casa_nova/ui/utils/app_colors.dart';
 import 'package:cha_casa_nova/ui/widgets/base_scaffold.dart';
 import 'package:cha_casa_nova/ui/widgets/icon_text_button.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
+import 'package:google_maps_flutter_web/google_maps_flutter_web.dart';
 import 'package:provider/provider.dart';
 
 class InfoPage extends StatelessWidget {
   final bool authenticated;
   final GlobalKey _scaffoldkey = GlobalKey();
   InfoPage({Key? key, required this.authenticated}) : super(key: key);
+  final GoogleMapsPlugin _googleMapsPlugin = GoogleMapsPlugin();
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +95,30 @@ class InfoPage extends StatelessWidget {
                         text: TextSpan(
                           children: <TextSpan>[
                             TextSpan(
+                              text: 'Necessário:',
+                              style: TextStyle(
+                                color: AppColors.appDarkGreen,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            TextSpan(
+                              text: ' Trazer sua bebida e copo ♥',
+                              style: TextStyle(
+                                color: AppColors.appDarkGreen,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      RichText(
+                        textAlign: TextAlign.start,
+                        text: TextSpan(
+                          children: <TextSpan>[
+                            TextSpan(
                               text: 'Regra Importante:',
                               style: TextStyle(
                                 color: AppColors.appDarkGreen,
@@ -110,6 +137,44 @@ class InfoPage extends StatelessWidget {
                         ),
                       ),
                     ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ConstrainedBox(
+                    constraints:
+                        const BoxConstraints(maxHeight: 500, maxWidth: 500),
+                    child: _googleMapsPlugin.buildViewWithConfiguration(
+                      2243,
+                      (int id) {},
+                      mapConfiguration: const MapConfiguration(
+                        compassEnabled: true,
+                        mapToolbarEnabled: true,
+                        myLocationButtonEnabled: true,
+                        myLocationEnabled: true,
+                      ),
+                      mapObjects: MapObjects(
+                        markers: <Marker>{
+                          const Marker(
+                            markerId: MarkerId('home'),
+                            position: LatLng(
+                              -22.916805367375932,
+                              -43.556920343049455,
+                            ),
+                          )
+                        },
+                      ),
+                      widgetConfiguration: const MapWidgetConfiguration(
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(
+                            -22.916805367375932,
+                            -43.556920343049455,
+                          ),
+                          zoom: 20,
+                        ),
+                        textDirection: TextDirection.ltr,
+                      ),
+                    ),
                   ),
                   const SizedBox(
                     height: 50,
