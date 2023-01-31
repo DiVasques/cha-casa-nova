@@ -2,6 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 class FirestoreHandler {
+  ///Retorna documentos [List[DocumentSnapshot]] da coleção selecionada
+  static Future<QuerySnapshot<Map<String, dynamic>>> getDocuments({
+    required String collection,
+  }) async {
+    debugPrint('state: services');
+    QuerySnapshot<Map<String, dynamic>> document =
+        await FirebaseFirestore.instance.collection(collection).get();
+    return document;
+  }
+
   ///Retorna documento [DocumentSnapshot] da coleção selecionada
   static Future<DocumentSnapshot<Map<String, dynamic>>> getDocument({
     required String id,
