@@ -142,6 +142,23 @@ class HomePage extends StatelessWidget {
       const SizedBox(
         height: 50,
       ),
+      Container(
+        alignment: Alignment.center,
+        width: 200,
+        height: 200,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(50.0),
+        ),
+        child: ClipOval(
+          child: Image.asset(
+            'assets/images/us_square.jpg',
+            filterQuality: FilterQuality.medium,
+          ),
+        ),
+      ),
+      const SizedBox(
+        height: 50,
+      ),
       IconTextButton(
         icon: Icons.exit_to_app,
         text: 'Sair',
