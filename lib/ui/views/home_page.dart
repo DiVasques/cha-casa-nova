@@ -10,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class HomePage extends StatelessWidget {
   final UserCredential userCredential;
@@ -113,6 +114,17 @@ class HomePage extends StatelessWidget {
         onPressed: () {
           Navigator.pushNamed(context, GenericRouter.infoRoute,
               arguments: true);
+        },
+      ),
+      const SizedBox(
+        height: 20,
+      ),
+      IconTextButton(
+        icon: FontAwesomeIcons.spotify,
+        text: 'Playlist',
+        onPressed: () {
+          launchUrlString(
+              'https://open.spotify.com/playlist/7kXnw01U038z1XtSHsa1QK?si=38564123cc5646c8');
         },
       ),
       const SizedBox(
