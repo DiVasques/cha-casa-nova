@@ -212,6 +212,9 @@ class _ShopPageState extends State<ShopPage> {
             ),
             const TextSpan(
               text: ' Diogo Vasques',
+              style: TextStyle(
+                color: Colors.black,
+              ),
             ),
           ],
         ),
@@ -229,6 +232,9 @@ class _ShopPageState extends State<ShopPage> {
             ),
             const TextSpan(
               text: ' (21) 980518900',
+              style: TextStyle(
+                color: Colors.black,
+              ),
             ),
           ],
         ),
