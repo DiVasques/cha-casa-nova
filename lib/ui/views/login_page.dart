@@ -5,6 +5,7 @@ import 'package:cha_casa_nova/ui/routers/generic_router.dart';
 import 'package:cha_casa_nova/ui/utils/app_colors.dart';
 import 'package:cha_casa_nova/ui/widgets/base_scaffold.dart';
 import 'package:cha_casa_nova/ui/widgets/icon_text_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,18 @@ class LoginPage extends StatelessWidget {
       create: (_) => LoginController(),
       child: Consumer<LoginController>(
         builder: (BuildContext context, LoginController loginController, _) {
+          User? firebaseUser = loginController.isUserAuthenticated();
+          if (firebaseUser != null) {
+            Future<Object?>.microtask(
+              () => Navigator.pushNamedAndRemoveUntil(
+                context,
+                GenericRouter.homeRoute,
+                (Route<dynamic> route) => false,
+                arguments: firebaseUser,
+              ),
+            );
+            return Container();
+          }
           return BaseScaffold(
               key: _scaffoldkey,
               body: Column(
@@ -70,7 +83,7 @@ class LoginPage extends StatelessWidget {
             if (result.status) {
               Navigator.pushNamedAndRemoveUntil(context,
                   GenericRouter.homeRoute, (Route<dynamic> route) => false,
-                  arguments: result.userCredential);
+                  arguments: result.userCredential!.user);
             }
           });
         },
