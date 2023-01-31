@@ -16,6 +16,10 @@ class HomeController extends BaseController {
 
   final HomeRepository _homeRepository = HomeRepository();
   User get user => _homeRepository.user;
+  set userConfirmPresence(bool confirmed) {
+    _homeRepository.user.confirmed = confirmed;
+    notifyListeners();
+  }
 
   Future<void> getUser() async {
     debugPrint('$runtimeType.state: getUser');
@@ -31,6 +35,21 @@ class HomeController extends BaseController {
       setErrorMessage(result.errorMessage ?? '');
       setState(ViewState.error);
     }
+  }
+
+  Future<Result> confirmPresence(bool confirmed) async {
+    debugPrint('$runtimeType.state: confirmPresence');
+    Result result = await _homeRepository.confirmPresence(
+      email: userCredential.user!.email!,
+      confirmed: !confirmed,
+    );
+
+    if (result.status) {
+      userConfirmPresence = !confirmed;
+    } else {
+      setErrorMessage(result.errorMessage ?? '');
+    }
+    return result;
   }
 
   Future<Result> signOut() async {

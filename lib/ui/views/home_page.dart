@@ -5,6 +5,7 @@ import 'package:cha_casa_nova/ui/routers/generic_router.dart';
 import 'package:cha_casa_nova/ui/utils/app_colors.dart';
 import 'package:cha_casa_nova/ui/widgets/base_scaffold.dart';
 import 'package:cha_casa_nova/ui/widgets/icon_text_button.dart';
+import 'package:cha_casa_nova/ui/widgets/text_button_with_checkbox.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -56,7 +57,7 @@ class HomePage extends StatelessWidget {
           height: 10,
         ),
         Text(
-          'Deu ruim na hora de pegar teus dados. Tenta de novo',
+          'Deu ruim na hora de pegar teus dados. Tenta de novo\n${homeController.errorMessage}',
           style: TextStyle(
             color: AppColors.appErrorRed,
           ),
@@ -94,6 +95,17 @@ class HomePage extends StatelessWidget {
       ),
       const SizedBox(
         height: 50,
+      ),
+      TextButtonWithCheckbox(
+        text: 'Confirmar Presença',
+        selected: homeController.user.confirmed,
+        onPressed: () async {
+          return await homeController
+              .confirmPresence(homeController.user.confirmed);
+        },
+      ),
+      const SizedBox(
+        height: 20,
       ),
       IconTextButton(
         icon: FontAwesomeIcons.info,
