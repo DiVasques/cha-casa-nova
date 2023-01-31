@@ -34,9 +34,9 @@ class HomeRepository {
       }
       debugPrint(userSnapshot.data().toString());
       user = User(
-        name: userSnapshot.get('name'),
-        email: userSnapshot.get('email'),
-      );
+          name: userSnapshot.get('name'),
+          email: userSnapshot.get('email'),
+          confirmed: userSnapshot.get('confirmed'));
     } on FirebaseException catch (error) {
       result.errorCode = error.code;
       result.errorMessage = error.message;
@@ -60,6 +60,7 @@ class HomeRepository {
         params: <String, dynamic>{
           'name': name,
           'email': email,
+          'confirmed': false,
         },
       );
       return result;
@@ -71,6 +72,33 @@ class HomeRepository {
       return result;
     } catch (error) {
       debugPrint('generic error create user: $error');
+      result.errorCode = '503';
+      result.errorMessage = error.toString();
+      result.status = false;
+      return result;
+    }
+  }
+
+  Future<Result> confirmPresence(
+      {required String email, required bool confirmed}) async {
+    Result result = Result(status: true);
+    try {
+      await FirestoreHandler.updateDocument(
+        id: email,
+        collection: DatabaseCollection.users,
+        params: <String, dynamic>{
+          'confirmed': confirmed,
+        },
+      );
+      return result;
+    } on FirebaseException catch (error) {
+      debugPrint('firebase error updating user: $error');
+      result.errorCode = error.code;
+      result.errorMessage = error.message;
+      result.status = false;
+      return result;
+    } catch (error) {
+      debugPrint('generic error updating user: $error');
       result.errorCode = '503';
       result.errorMessage = error.toString();
       result.status = false;
