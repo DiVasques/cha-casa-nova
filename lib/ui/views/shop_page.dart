@@ -151,7 +151,7 @@ class _ShopPageState extends State<ShopPage> {
             child: SfSlider(
               value: value,
               onChanged: (dynamic newv) {},
-              interval: item.totalPieces % 2 == 0 ? 2 : 1,
+              interval: _getSliderInterval(item.totalPieces),
               showLabels: true,
               min: 0,
               max: item.totalPieces.toDouble(),
@@ -163,6 +163,22 @@ class _ShopPageState extends State<ShopPage> {
       itemsSliders.add(const SizedBox(height: 10));
     }
     return itemsSliders;
+  }
+
+  double _getSliderInterval(int totalPieces) {
+    if (totalPieces % 5 == 0) {
+      return totalPieces / 5;
+    }
+    if (totalPieces % 4 == 0) {
+      return totalPieces / 4;
+    }
+    if (totalPieces % 3 == 0) {
+      return totalPieces / 3;
+    }
+    if (totalPieces % 2 == 0) {
+      return totalPieces / 2;
+    }
+    return totalPieces.toDouble();
   }
 
   List<Widget> _buildPixInformation() {
