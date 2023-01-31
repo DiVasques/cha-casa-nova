@@ -3,13 +3,11 @@ import 'package:cha_casa_nova/services/firestore_handler.dart';
 import 'package:cha_casa_nova/services/models/result.dart';
 import 'package:cha_casa_nova/services/utils/database_collections.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 
 class HomeRepository {
   late User user;
 
   Future<Result> getUser({required String email, required String name}) async {
-    debugPrint('state: repository');
     Result result = Result(status: true);
 
     try {
@@ -32,7 +30,6 @@ class HomeRepository {
           collection: DatabaseCollection.users,
         );
       }
-      debugPrint(userSnapshot.data().toString());
       user = User(
           name: userSnapshot.get('name'),
           email: userSnapshot.get('email'),
@@ -65,13 +62,11 @@ class HomeRepository {
       );
       return result;
     } on FirebaseException catch (error) {
-      debugPrint('firebase error create user: $error');
       result.errorCode = error.code;
       result.errorMessage = error.message;
       result.status = false;
       return result;
     } catch (error) {
-      debugPrint('generic error create user: $error');
       result.errorCode = '503';
       result.errorMessage = error.toString();
       result.status = false;
@@ -92,13 +87,11 @@ class HomeRepository {
       );
       return result;
     } on FirebaseException catch (error) {
-      debugPrint('firebase error updating user: $error');
       result.errorCode = error.code;
       result.errorMessage = error.message;
       result.status = false;
       return result;
     } catch (error) {
-      debugPrint('generic error updating user: $error');
       result.errorCode = '503';
       result.errorMessage = error.toString();
       result.status = false;

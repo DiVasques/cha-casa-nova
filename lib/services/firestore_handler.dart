@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 
 class FirestoreHandler {
   ///Retorna documentos [List[DocumentSnapshot]] da coleção selecionada
   static Future<QuerySnapshot<Map<String, dynamic>>> getDocuments({
     required String collection,
   }) async {
-    debugPrint('state: services');
     QuerySnapshot<Map<String, dynamic>> document =
         await FirebaseFirestore.instance.collection(collection).get();
     return document;
@@ -17,7 +15,6 @@ class FirestoreHandler {
     required String id,
     required String collection,
   }) async {
-    debugPrint('state: services');
     DocumentSnapshot<Map<String, dynamic>> document =
         await FirebaseFirestore.instance.collection(collection).doc(id).get();
     return document;
@@ -29,7 +26,6 @@ class FirestoreHandler {
     required String collection,
     required Map<String, dynamic> params,
   }) async {
-    debugPrint('state: services');
     await FirebaseFirestore.instance.collection(collection).doc(id).set(params);
   }
 
@@ -39,7 +35,6 @@ class FirestoreHandler {
     required String collection,
     required Map<String, dynamic> params,
   }) async {
-    debugPrint('state: services');
     await FirebaseFirestore.instance
         .collection(collection)
         .doc(id)
@@ -53,7 +48,6 @@ class FirestoreHandler {
     required String field,
     required dynamic param,
   }) async {
-    debugPrint('state: services');
     await FirebaseFirestore.instance
         .collection(collection)
         .doc(id)
@@ -69,7 +63,6 @@ class FirestoreHandler {
     required String field,
     required dynamic param,
   }) async {
-    debugPrint('state: services');
     await FirebaseFirestore.instance
         .collection(collection)
         .doc(identifier)

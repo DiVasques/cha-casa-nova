@@ -3,13 +3,11 @@ import 'package:cha_casa_nova/services/firestore_handler.dart';
 import 'package:cha_casa_nova/services/models/result.dart';
 import 'package:cha_casa_nova/services/utils/database_collections.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 
 class ShopRepository {
   List<Item> items = <Item>[];
 
   Future<Result> getItems() async {
-    debugPrint('state: repository');
     Result result = Result(status: true);
 
     try {
