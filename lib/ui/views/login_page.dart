@@ -66,7 +66,6 @@ class LoginPage extends StatelessWidget {
         icon: FontAwesomeIcons.google,
         text: 'Entrar com Google',
         onPressed: () {
-          debugPrint('google');
           loginController.googleSignIn().then((AuthResult result) {
             if (result.status) {
               Navigator.pushNamedAndRemoveUntil(context,
