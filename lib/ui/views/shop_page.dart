@@ -7,6 +7,7 @@ import 'package:cha_casa_nova/ui/widgets/icon_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class ShopPage extends StatefulWidget {
@@ -54,6 +55,10 @@ class _ShopPageState extends State<ShopPage> {
                 ),
                 const Text(
                   'Anota os pedacinhos que você quer, soma e me manda junto com o comprovante do pix',
+                  textAlign: TextAlign.center,
+                ),
+                const Text(
+                  'Não esqueça de nos enviar quais pedacinhos você escolheu para atualizarmos a lista',
                   textAlign: TextAlign.center,
                 ),
                 const Text(
@@ -148,13 +153,23 @@ class _ShopPageState extends State<ShopPage> {
           Flexible(
             fit: FlexFit.loose,
             flex: 6,
-            child: SfSlider(
-              value: value,
-              onChanged: (dynamic newv) {},
-              interval: _getSliderInterval(item.totalPieces),
-              showLabels: true,
-              min: 0,
-              max: item.totalPieces.toDouble(),
+            child: SfSliderTheme(
+              data: SfSliderThemeData(
+                disabledActiveTrackColor: AppColors.appDarkGreen,
+                disabledActiveTickColor: AppColors.appDarkGreen,
+                disabledInactiveTickColor: AppColors.appLightGreen,
+                disabledActiveMinorTickColor: AppColors.appDarkGreen,
+                disabledInactiveMinorTickColor: AppColors.appLightGreen,
+                disabledThumbColor: AppColors.appDarkGreen,
+              ),
+              child: SfSlider(
+                value: value,
+                onChanged: null,
+                interval: _getSliderInterval(item.totalPieces),
+                showLabels: true,
+                min: 0,
+                max: item.totalPieces.toDouble(),
+              ),
             ),
           ),
         ],
