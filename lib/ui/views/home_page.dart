@@ -136,7 +136,7 @@ class HomePage extends StatelessWidget {
         text: 'Playlist',
         onPressed: () {
           launchUrlString(
-              'https://open.spotify.com/playlist/7kXnw01U038z1XtSHsa1QK?si=38564123cc5646c8');
+              'https://open.spotify.com/playlist/7kXnw01U038z1XtSHsa1QK?si=hPTeT8gLQO6t-2ES3UjQfQ&utm_source=whatsapp&pt=c850169fb98d1122304553804dbc42a0');
         },
       ),
       const SizedBox(
@@ -151,7 +151,7 @@ class HomePage extends StatelessWidget {
         ),
         child: ClipOval(
           child: Image.asset(
-            'assets/images/us_square.jpg',
+            'assets/images/us_square_small.jpg',
             filterQuality: FilterQuality.medium,
           ),
         ),
