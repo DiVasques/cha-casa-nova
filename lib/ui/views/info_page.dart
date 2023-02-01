@@ -3,9 +3,11 @@ import 'package:cha_casa_nova/ui/utils/app_colors.dart';
 import 'package:cha_casa_nova/ui/widgets/base_scaffold.dart';
 import 'package:cha_casa_nova/ui/widgets/icon_text_button.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:google_maps_flutter_web/google_maps_flutter_web.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class InfoPage extends StatelessWidget {
   final bool authenticated;
@@ -179,6 +181,16 @@ class InfoPage extends StatelessWidget {
                         textDirection: TextDirection.ltr,
                       ),
                     ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  IconTextButton(
+                    icon: FontAwesomeIcons.mapLocation,
+                    text: 'Abrir no Maps',
+                    onPressed: () {
+                      launchUrlString('https://goo.gl/maps/jfx6LxSCzttXQ9uz5');
+                    },
                   ),
                   const SizedBox(
                     height: 50,
