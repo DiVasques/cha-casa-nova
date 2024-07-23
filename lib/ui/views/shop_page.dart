@@ -8,9 +8,8 @@ import 'package:cha_casa_nova/ui/widgets/base_scaffold.dart';
 import 'package:cha_casa_nova/ui/widgets/icon_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:number_selector/number_selector.dart';
 import 'package:provider/provider.dart';
-import 'package:syncfusion_flutter_core/theme.dart';
-import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class ShopPage extends StatefulWidget {
   final String email;
@@ -23,8 +22,8 @@ class ShopPage extends StatefulWidget {
 }
 
 class _ShopPageState extends State<ShopPage> {
-  final Map<String, double> _sliderValues = <String, double>{};
-  final GlobalKey _scaffoldkey = GlobalKey();
+  final Map<String, int> _cartItemSelectedValues = <String, int>{};
+  final GlobalKey _scaffoldKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ShopController>(
@@ -32,7 +31,7 @@ class _ShopPageState extends State<ShopPage> {
       child: Consumer<ShopController>(
         builder: (BuildContext context, ShopController shopController, _) {
           return BaseScaffold(
-            key: _scaffoldkey,
+            key: _scaffoldKey,
             body: Column(
               mainAxisAlignment:
                   shopController.state != ViewState.idle ? MainAxisAlignment.center : MainAxisAlignment.start,
@@ -72,14 +71,7 @@ class _ShopPageState extends State<ShopPage> {
                 const SizedBox(
                   height: 20,
                 ),
-                ..._buildSliders(shopController),
-                const SizedBox(
-                  height: 20,
-                ),
-                _buildCartSection(shopController),
-                const SizedBox(
-                  height: 20,
-                ),
+                ..._buildMainBody(shopController),
                 ..._buildPixInformation(),
                 const SizedBox(
                   height: 50,
@@ -100,7 +92,7 @@ class _ShopPageState extends State<ShopPage> {
     );
   }
 
-  List<Widget> _buildSliders(ShopController shopController) {
+  List<Widget> _buildMainBody(ShopController shopController) {
     if (shopController.state == ViewState.busy) {
       return <Widget>[
         SizedBox(
@@ -138,97 +130,157 @@ class _ShopPageState extends State<ShopPage> {
       ];
     }
 
-    List<Widget> itemsSliders = <Widget>[];
+    List<Widget> mainBodySections = <Widget>[];
+    mainBodySections.addAll(_buildLinearProgressIndicators(shopController));
+    mainBodySections.add(const SizedBox(height: 20));
+    mainBodySections.addAll(_buildItemSelectors(shopController));
+    mainBodySections.add(const SizedBox(height: 20));
+    mainBodySections.add(_buildCartSection(shopController));
+    mainBodySections.add(const SizedBox(height: 20));
+    return mainBodySections;
+  }
+
+  List<Widget> _buildLinearProgressIndicators(ShopController shopController) {
+    List<Widget> itemsProgressIndicators = <Widget>[];
+    itemsProgressIndicators.add(
+      Text(
+        'Andamento',
+        style: TextStyle(
+          color: AppColors.appDarkGreen,
+          fontWeight: FontWeight.bold,
+          fontSize: 18,
+        ),
+      ),
+    );
     for (Item item in shopController.items) {
-      double actualValue = (item.totalPieces - item.availablePieces).toDouble();
-      _sliderValues[item.id] = _sliderValues[item.id] ??= actualValue;
-      Widget itemSlider = Flex(
+      double progressValue = (item.totalPieces - item.availablePieces) / item.totalPieces;
+      Widget itemProgressIndicator = Flex(
         direction: Axis.horizontal,
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Flexible(
-            flex: 2,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.end,
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Text(
-                  item.name,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text('R\$${item.totalPrice.toStringAsFixed(2)}')
-              ],
+            flex: 3,
+            child: Text(
+              item.name,
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
           Flexible(
             fit: FlexFit.loose,
-            flex: 6,
-            child: SfSliderTheme(
-              data: SfSliderThemeData(
-                activeTrackColor: AppColors.appDarkGreen,
-                disabledActiveTrackColor: AppColors.appDarkGreen,
-                activeTickColor: AppColors.appDarkGreen,
-                disabledActiveTickColor: AppColors.appDarkGreen,
-                inactiveTickColor: AppColors.appLightGreen,
-                disabledInactiveTickColor: AppColors.appLightGreen,
-                activeMinorTickColor: AppColors.appDarkGreen,
-                disabledActiveMinorTickColor: AppColors.appDarkGreen,
-                inactiveMinorTickColor: AppColors.appLightGreen,
-                disabledInactiveMinorTickColor: AppColors.appLightGreen,
-                thumbColor: AppColors.appDarkGreen,
-                disabledThumbColor: AppColors.appDarkGreen,
-              ),
-              child: SfSlider(
-                value: _sliderValues[item.id],
-                onChangeEnd: (dynamic endValue) {
-                  shopController.addToCart(item, _sliderValues[item.id]!);
-                },
-                onChanged: (dynamic newValue) {
-                  if (newValue < (item.totalPieces - item.availablePieces)) {
-                    return;
-                  }
-                  setState(() {
-                    _sliderValues[item.id] = newValue;
-                  });
-                },
-                interval: _getSliderInterval(item.totalPieces),
-                stepSize: 1,
-                showLabels: true,
-                enableTooltip: true,
-                tooltipTextFormatterCallback: (dynamic actualValue, String formattedText) {
-                  int quantity = (actualValue - (item.totalPieces - item.availablePieces)).round();
-                  return quantity.toString();
-                },
-                min: 0,
-                max: item.totalPieces.toDouble(),
-              ),
+            flex: 5,
+            child: LinearProgressIndicator(
+              value: progressValue,
             ),
           ),
         ],
       );
-      itemsSliders.add(itemSlider);
-      itemsSliders.add(const SizedBox(height: 10));
+      itemsProgressIndicators.add(itemProgressIndicator);
+      itemsProgressIndicators.add(const SizedBox(height: 10));
     }
-    return itemsSliders;
+    return itemsProgressIndicators;
   }
 
-  double _getSliderInterval(int totalPieces) {
-    if (totalPieces % 5 == 0) {
-      return totalPieces / 5;
+  List<Widget> _buildItemSelectors(ShopController shopController) {
+    List<Widget> itemsQuantitySelectors = <Widget>[];
+    for (Item item in shopController.items) {
+      _cartItemSelectedValues[item.id] = _cartItemSelectedValues[item.id] ??= 0;
+      List<Widget> itemDetailsAndSelectorWidgets = <Widget>[
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Text(
+              item.name,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Text(
+              'R\$${item.totalPrice.toStringAsFixed(2)}',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+              ),
+            ),
+            Text.rich(
+              style: const TextStyle(
+                fontSize: 12,
+              ),
+              TextSpan(
+                children: <TextSpan>[
+                  const TextSpan(
+                    text: 'Pedacinho:',
+                  ),
+                  TextSpan(
+                    text: ' R\$${item.piecePrice.toStringAsFixed(2)}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Text.rich(
+              style: const TextStyle(
+                fontSize: 12,
+              ),
+              TextSpan(
+                children: <TextSpan>[
+                  const TextSpan(
+                    text: 'Quantidade restante:',
+                  ),
+                  TextSpan(
+                    text: ' ${item.availablePieces}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        NumberSelector(
+          incrementTooltip: 'Adicionar',
+          decrementTooltip: 'Remover',
+          borderRadius: 10,
+          contentPadding: 10,
+          incrementIcon: Icons.add,
+          decrementIcon: Icons.remove,
+          current: _cartItemSelectedValues[item.id]!,
+          min: 0,
+          width: 200,
+          max: item.availablePieces,
+          showSuffix: false,
+          showMinMax: false,
+          hasCenteredText: true,
+          onUpdate: (int newValue) {
+            shopController.addToCart(item, newValue);
+            setState(() {
+              _cartItemSelectedValues[item.id] = newValue;
+            });
+          },
+        )
+      ];
+      double screenWidth = MediaQuery.of(context).size.width;
+      Widget itemQuantitySelectorColumn = Align(
+        alignment: Alignment.centerLeft,
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: itemDetailsAndSelectorWidgets),
+      );
+      Widget itemQuantitySelectorFlex = Flex(
+          direction: Axis.horizontal,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: itemDetailsAndSelectorWidgets);
+      itemsQuantitySelectors.add(screenWidth > 500 ? itemQuantitySelectorFlex : itemQuantitySelectorColumn);
+      itemsQuantitySelectors.add(const SizedBox(height: 10));
     }
-    if (totalPieces % 4 == 0) {
-      return totalPieces / 4;
-    }
-    if (totalPieces % 3 == 0) {
-      return totalPieces / 3;
-    }
-    if (totalPieces % 2 == 0) {
-      return totalPieces / 2;
-    }
-    return totalPieces.toDouble();
+    return itemsQuantitySelectors;
   }
 
   List<Widget> _buildPixInformation() {
@@ -265,9 +317,8 @@ class _ShopPageState extends State<ShopPage> {
         ),
       ),
       const SizedBox(height: 20),
-      RichText(
-        textAlign: TextAlign.center,
-        text: TextSpan(
+      Text.rich(
+        TextSpan(
           children: <TextSpan>[
             TextSpan(
               text: 'Beneficiário:',
@@ -285,9 +336,8 @@ class _ShopPageState extends State<ShopPage> {
           ],
         ),
       ),
-      RichText(
-        textAlign: TextAlign.center,
-        text: TextSpan(
+      Text.rich(
+        TextSpan(
           children: <TextSpan>[
             TextSpan(
               text: 'Chave Pix:',
@@ -329,7 +379,7 @@ class _ShopPageState extends State<ShopPage> {
                 onPressed: () {
                   shopController.removeFromCart(item.id);
                   setState(() {
-                    _sliderValues[item.id] = 0;
+                    _cartItemSelectedValues[item.id] = 0;
                   });
                 },
                 icon: const Icon(Icons.delete))
@@ -343,7 +393,7 @@ class _ShopPageState extends State<ShopPage> {
       cartItemsTiles.insert(
         0,
         Text(
-          'Carrinho',
+          'Resumo',
           style: TextStyle(
             color: AppColors.appDarkGreen,
             fontWeight: FontWeight.bold,
@@ -386,7 +436,7 @@ class _ShopPageState extends State<ShopPage> {
                   ),
                 );
                 setState(() {
-                  _sliderValues.clear();
+                  _cartItemSelectedValues.clear();
                   shopController.getItems();
                 });
               },
