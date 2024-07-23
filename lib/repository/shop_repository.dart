@@ -11,13 +11,11 @@ class ShopRepository {
     Result result = Result(status: true);
 
     try {
-      QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await FirestoreHandler.getDocuments(
+      QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirestoreHandler.getDocuments(
         collection: DatabaseCollection.items,
       );
 
-      for (QueryDocumentSnapshot<Map<String, dynamic>> document
-          in querySnapshot.docs) {
+      for (QueryDocumentSnapshot<Map<String, dynamic>> document in querySnapshot.docs) {
         Item item = Item(
           id: document.id,
           name: document.get('name'),
@@ -37,7 +35,7 @@ class ShopRepository {
       result.errorMessage = error.toString();
       result.status = false;
     }
-
+    items.sort((Item a, Item b) => a.name.compareTo(b.name));
     return result;
   }
 }
