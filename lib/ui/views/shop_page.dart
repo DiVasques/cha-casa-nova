@@ -1,5 +1,6 @@
 import 'package:cha_casa_nova/repository/models/cart_item.dart';
 import 'package:cha_casa_nova/repository/models/item.dart';
+import 'package:cha_casa_nova/services/models/result.dart';
 import 'package:cha_casa_nova/ui/controllers/base_controller.dart';
 import 'package:cha_casa_nova/ui/controllers/shop_controller.dart';
 import 'package:cha_casa_nova/ui/utils/app_colors.dart';
@@ -12,10 +13,10 @@ import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class ShopPage extends StatefulWidget {
-  final bool authenticated;
+  final String email;
   final String pixCode =
       '00020126360014BR.GOV.BCB.PIX0114+55219805189005204000053039865802BR5913Diogo Vasques6014Rio de Janeiro62070503***630416F8';
-  const ShopPage({Key? key, required this.authenticated}) : super(key: key);
+  const ShopPage({Key? key, required this.email}) : super(key: key);
 
   @override
   State<ShopPage> createState() => _ShopPageState();
@@ -141,7 +142,6 @@ class _ShopPageState extends State<ShopPage> {
     for (Item item in shopController.items) {
       double actualValue = (item.totalPieces - item.availablePieces).toDouble();
       _sliderValues[item.id] = _sliderValues[item.id] ??= actualValue;
-      shopController.sliderValues[item.id] = actualValue;
       Widget itemSlider = Flex(
         direction: Axis.horizontal,
         mainAxisSize: MainAxisSize.max,
@@ -376,8 +376,21 @@ class _ShopPageState extends State<ShopPage> {
           text: 'Finalizar',
           dense: true,
           onPressed: () {
-            //TODO: Implementar funcionalidade de finalizar compra. Criar coleção de compra no banco para salvar pessoa e itens
-            Navigator.pop(context);
+            shopController.confirmPurchase(email: widget.email).then(
+              (Result result) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    behavior: SnackBarBehavior.floating,
+                    duration: const Duration(seconds: 3),
+                    content: Text(result.status ? 'Escolhas confirmadas com sucesso.' : 'Erro ao confirmar escolhas.'),
+                  ),
+                );
+                setState(() {
+                  _sliderValues.clear();
+                  shopController.getItems();
+                });
+              },
+            );
           },
         ),
       );

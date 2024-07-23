@@ -20,12 +20,10 @@ class GenericRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     WidgetBuilder builder;
 
-    if (authenticatedRoutes.contains(settings.name) &&
-        settings.arguments == null) {
+    if (authenticatedRoutes.contains(settings.name) && settings.arguments == null) {
       RouteSettings redirectSettings = const RouteSettings(name: loginRoute);
       builder = (BuildContext _) => LoginPage();
-      return MaterialPageRoute<dynamic>(
-          builder: builder, settings: redirectSettings);
+      return MaterialPageRoute<dynamic>(builder: builder, settings: redirectSettings);
     }
 
     switch (settings.name) {
@@ -33,16 +31,13 @@ class GenericRouter {
         builder = (BuildContext _) => LoginPage();
         break;
       case homeRoute:
-        builder = (BuildContext _) =>
-            HomePage(firebaseUser: settings.arguments as firebase_auth.User);
+        builder = (BuildContext _) => HomePage(firebaseUser: settings.arguments as firebase_auth.User);
         break;
       case infoRoute:
-        builder = (BuildContext _) =>
-            InfoPage(authenticated: settings.arguments as bool);
+        builder = (BuildContext _) => InfoPage(authenticated: settings.arguments as bool);
         break;
       case shopRoute:
-        builder = (BuildContext _) =>
-            ShopPage(authenticated: settings.arguments as bool);
+        builder = (BuildContext _) => ShopPage(email: settings.arguments as String);
         break;
       default:
         builder = (BuildContext _) => LoginPage();

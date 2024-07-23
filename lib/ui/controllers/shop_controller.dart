@@ -33,15 +33,9 @@ class ShopController extends BaseController {
     notifyListeners();
   }
 
-  final Map<String, double> _sliderValues = <String, double>{};
-  Map<String, double> get sliderValues => _sliderValues;
-  void updateSliderValue(String id, double newValue){
-    _sliderValues[id] = newValue;
-    notifyListeners();
-  }
-
   Future<void> getItems() async {
     setState(ViewState.busy);
+    _cartItems.clear();
     Result result = await _shopRepository.getItems();
 
     if (result.status) {
@@ -50,5 +44,18 @@ class ShopController extends BaseController {
     }
     setErrorMessage(result.errorMessage ?? '');
     setState(ViewState.error);
+    notifyListeners();
+  }
+
+  Future<Result> confirmPurchase({required String email}) async {
+    setState(ViewState.busy);
+    Result result = Result(status: true);
+    try {
+      result = await _shopRepository.saveCartHistory(email: email, items: _cartItems);
+    } catch (e) {
+      result.status = false;
+    }
+    setState(ViewState.idle);
+    return result;
   }
 }

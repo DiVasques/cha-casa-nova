@@ -99,7 +99,7 @@ class HomePage extends StatelessWidget {
         icon: FontAwesomeIcons.basketShopping,
         text: 'Listinha',
         onPressed: () {
-          Navigator.pushNamed(context, GenericRouter.shopRoute, arguments: true);
+          Navigator.pushNamed(context, GenericRouter.shopRoute, arguments: homeController.user.email);
         },
       ),
       const SizedBox(
