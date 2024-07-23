@@ -1,3 +1,4 @@
+import 'package:cha_casa_nova/repository/models/cart_item.dart';
 import 'package:cha_casa_nova/repository/models/item.dart';
 import 'package:cha_casa_nova/ui/controllers/base_controller.dart';
 import 'package:cha_casa_nova/ui/controllers/shop_controller.dart';
@@ -21,9 +22,8 @@ class ShopPage extends StatefulWidget {
 }
 
 class _ShopPageState extends State<ShopPage> {
-  // final bool authenticated;
+  final Map<String, double> _sliderValues = <String, double>{};
   final GlobalKey _scaffoldkey = GlobalKey();
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ShopController>(
@@ -33,9 +33,8 @@ class _ShopPageState extends State<ShopPage> {
           return BaseScaffold(
             key: _scaffoldkey,
             body: Column(
-              mainAxisAlignment: shopController.state != ViewState.idle
-                  ? MainAxisAlignment.center
-                  : MainAxisAlignment.start,
+              mainAxisAlignment:
+                  shopController.state != ViewState.idle ? MainAxisAlignment.center : MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Text(
@@ -47,26 +46,38 @@ class _ShopPageState extends State<ShopPage> {
                   ),
                 ),
                 const SizedBox(
-                  height: 50,
+                  height: 20,
+                ),
+                Text(
+                  'Como funciona?',
+                  style: TextStyle(
+                    color: AppColors.appDarkGreen,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                const Text(
+                  'Escolha os pedacinhos que você quer dar, e, ao finalizar a escolha, faça o Pix e clique em Finalizar.',
+                  textAlign: TextAlign.center,
+                ),
+                const Text(
+                  'As informações do Pix estão no final da página.',
+                  textAlign: TextAlign.center,
+                ),
+                const Text(
+                  'Não esqueça de nos enviar o comprovante!',
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(
+                  height: 20,
                 ),
                 ..._buildSliders(shopController),
                 const SizedBox(
                   height: 20,
                 ),
-                const Text(
-                  'Anota os pedacinhos que você quer, soma e me manda junto com o comprovante do pix',
-                  textAlign: TextAlign.center,
-                ),
-                const Text(
-                  'Não esqueça de nos enviar quais pedacinhos você escolheu para atualizarmos a lista',
-                  textAlign: TextAlign.center,
-                ),
-                const Text(
-                  'Era pra isso ser automático, mas não deu tempo de fazer. Foi mal 🤪',
-                  style: TextStyle(
-                    fontSize: 10,
-                  ),
-                  textAlign: TextAlign.center,
+                _buildCartSection(shopController),
+                const SizedBox(
+                  height: 20,
                 ),
                 ..._buildPixInformation(),
                 const SizedBox(
@@ -128,7 +139,9 @@ class _ShopPageState extends State<ShopPage> {
 
     List<Widget> itemsSliders = <Widget>[];
     for (Item item in shopController.items) {
-      double value = (item.totalPieces - item.availablePieces).toDouble();
+      double actualValue = (item.totalPieces - item.availablePieces).toDouble();
+      _sliderValues[item.id] = _sliderValues[item.id] ??= actualValue;
+      shopController.sliderValues[item.id] = actualValue;
       Widget itemSlider = Flex(
         direction: Axis.horizontal,
         mainAxisSize: MainAxisSize.max,
@@ -155,18 +168,40 @@ class _ShopPageState extends State<ShopPage> {
             flex: 6,
             child: SfSliderTheme(
               data: SfSliderThemeData(
+                activeTrackColor: AppColors.appDarkGreen,
                 disabledActiveTrackColor: AppColors.appDarkGreen,
+                activeTickColor: AppColors.appDarkGreen,
                 disabledActiveTickColor: AppColors.appDarkGreen,
+                inactiveTickColor: AppColors.appLightGreen,
                 disabledInactiveTickColor: AppColors.appLightGreen,
+                activeMinorTickColor: AppColors.appDarkGreen,
                 disabledActiveMinorTickColor: AppColors.appDarkGreen,
+                inactiveMinorTickColor: AppColors.appLightGreen,
                 disabledInactiveMinorTickColor: AppColors.appLightGreen,
+                thumbColor: AppColors.appDarkGreen,
                 disabledThumbColor: AppColors.appDarkGreen,
               ),
               child: SfSlider(
-                value: value,
-                onChanged: null,
+                value: _sliderValues[item.id],
+                onChangeEnd: (dynamic endValue) {
+                  shopController.addToCart(item, _sliderValues[item.id]!);
+                },
+                onChanged: (dynamic newValue) {
+                  if (newValue < (item.totalPieces - item.availablePieces)) {
+                    return;
+                  }
+                  setState(() {
+                    _sliderValues[item.id] = newValue;
+                  });
+                },
                 interval: _getSliderInterval(item.totalPieces),
+                stepSize: 1,
                 showLabels: true,
+                enableTooltip: true,
+                tooltipTextFormatterCallback: (dynamic actualValue, String formattedText) {
+                  int quantity = (actualValue - (item.totalPieces - item.availablePieces)).round();
+                  return quantity.toString();
+                },
                 min: 0,
                 max: item.totalPieces.toDouble(),
               ),
@@ -208,7 +243,7 @@ class _ShopPageState extends State<ShopPage> {
           fontWeight: FontWeight.bold,
         ),
       ),
-      Text(
+      SelectableText(
         widget.pixCode,
         textAlign: TextAlign.center,
       ),
@@ -271,5 +306,86 @@ class _ShopPageState extends State<ShopPage> {
         ),
       ),
     ];
+  }
+
+  Widget _buildCartSection(ShopController shopController) {
+    List<Widget> cartItemsTiles = <Widget>[];
+    for (CartItem item in shopController.cartItems) {
+      Widget cartItemTile = ListTile(
+        title: Text(
+          item.name,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+        subtitle: Text('Quantidade: ${item.quantity}'),
+        visualDensity: VisualDensity.compact,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(
+              'R\$${(item.quantity * item.piecePrice).toStringAsFixed(2)}',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            IconButton(
+                onPressed: () {
+                  shopController.removeFromCart(item.id);
+                  setState(() {
+                    _sliderValues[item.id] = 0;
+                  });
+                },
+                icon: const Icon(Icons.delete))
+          ],
+        ),
+      );
+      cartItemsTiles.add(cartItemTile);
+      cartItemsTiles.add(const SizedBox(height: 10));
+    }
+    if (shopController.cartItems.isNotEmpty) {
+      cartItemsTiles.insert(
+        0,
+        Text(
+          'Carrinho',
+          style: TextStyle(
+            color: AppColors.appDarkGreen,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
+      );
+      cartItemsTiles.add(
+        ListTile(
+          title: Text(
+            'Total',
+            style: TextStyle(
+              color: AppColors.appDarkGreen,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+          trailing: Text(
+            'R\$${(shopController.cartItems.fold(
+              0,
+              (int totalPrice, CartItem item) => totalPrice + (item.piecePrice * item.quantity).round(),
+            )).toStringAsFixed(2)}',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
+        ),
+      );
+      cartItemsTiles.add(
+        IconTextButton(
+          icon: Icons.shopping_bag_outlined,
+          text: 'Finalizar',
+          dense: true,
+          onPressed: () {
+            //TODO: Implementar funcionalidade de finalizar compra. Criar coleção de compra no banco para salvar pessoa e itens
+            Navigator.pop(context);
+          },
+        ),
+      );
+    }
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: cartItemsTiles,
+    );
   }
 }

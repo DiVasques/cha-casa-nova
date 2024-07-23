@@ -6,12 +6,10 @@ import 'package:cha_casa_nova/ui/routers/generic_router.dart';
 import 'package:cha_casa_nova/ui/utils/app_colors.dart';
 import 'package:cha_casa_nova/ui/widgets/base_scaffold.dart';
 import 'package:cha_casa_nova/ui/widgets/icon_text_button.dart';
-import 'package:cha_casa_nova/ui/widgets/text_button_with_checkbox.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class HomePage extends StatelessWidget {
   final firebase_auth.User firebaseUser;
@@ -95,27 +93,6 @@ class HomePage extends StatelessWidget {
         ),
       ),
       const SizedBox(
-        height: 50,
-      ),
-      TextButtonWithCheckbox(
-        text: 'Confirmar Presença',
-        selected: homeController.user.confirmed,
-        onPressed: () async {
-          return await homeController
-              .confirmPresence(homeController.user.confirmed);
-        },
-      ),
-      const SizedBox(
-        height: 20,
-      ),
-      IconTextButton(
-        icon: FontAwesomeIcons.info,
-        text: 'Informações',
-        onPressed: () {
-          Navigator.pushNamed(context, GenericRouter.infoRoute, arguments: true);
-        },
-      ),
-      const SizedBox(
         height: 20,
       ),
       IconTextButton(
@@ -125,18 +102,6 @@ class HomePage extends StatelessWidget {
           Navigator.pushNamed(context, GenericRouter.shopRoute, arguments: true);
         },
       ),
-      const SizedBox(
-        height: 20,
-      ),
-      IconTextButton(
-        icon: FontAwesomeIcons.spotify,
-        text: 'Playlist',
-        onPressed: () {
-          launchUrlString(
-              'https://open.spotify.com/playlist/7kXnw01U038z1XtSHsa1QK?si=hPTeT8gLQO6t-2ES3UjQfQ&utm_source=whatsapp&pt=c850169fb98d1122304553804dbc42a0');
-        },
-      ),
-      ..._buildEmailButton(homeController, context),
       const SizedBox(
         height: 50,
       ),
@@ -149,7 +114,7 @@ class HomePage extends StatelessWidget {
             enlargeCenterPage: true,
             enableInfiniteScroll: false,
           ),
-          items: [
+          items: <Widget>[
             ClipOval(
               child: Image.asset(
                 'assets/images/us_square_small.jpg',
@@ -201,31 +166,5 @@ class HomePage extends StatelessWidget {
         },
       ),
     ];
-  }
-
-  List<Widget> _buildEmailButton(HomeController homeController, BuildContext context) {
-    if (homeController.user.admin == true) {
-      return <Widget>[
-        const SizedBox(
-          height: 20,
-        ),
-        IconTextButton(
-          icon: Icons.email_outlined,
-          text: 'Email de Presença',
-          onPressed: () {
-            homeController.sendConfirmPresenceEmail().then(
-                  (Result result) => ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      behavior: SnackBarBehavior.floating,
-                      duration: const Duration(seconds: 2),
-                      content: Text(result.status ? 'Email enviado.' : 'Erro ao enviar email.'),
-                    ),
-                  ),
-                );
-          },
-        ),
-      ];
-    }
-    return <Widget>[];
   }
 }
