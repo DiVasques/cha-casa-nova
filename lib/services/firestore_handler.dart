@@ -21,6 +21,14 @@ class FirestoreHandler {
   }
 
   ///Adiciona documento ao banco de dados
+  static Future<void> addDocumentNewId({
+    required String collection,
+    required Map<String, dynamic> data,
+  }) async {
+    await FirebaseFirestore.instance.collection(collection).add(data);
+  }
+
+  ///Adiciona documento ao banco de dados
   static Future<void> addDocument({
     required String id,
     required String collection,
