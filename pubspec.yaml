@@ -50,8 +50,11 @@ dependencies:
 
   url_launcher: ^6.1.8
 
+  http: ^0.13.5
+
   syncfusion_flutter_sliders: ^20.4.44
   syncfusion_flutter_core: ^20.4.44
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:

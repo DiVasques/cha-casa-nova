@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cha_casa_nova/services/models/result.dart';
 import 'package:cha_casa_nova/ui/controllers/base_controller.dart';
 import 'package:cha_casa_nova/ui/controllers/home_controller.dart';
@@ -26,9 +27,8 @@ class HomePage extends StatelessWidget {
           return BaseScaffold(
               key: _scaffoldkey,
               body: Column(
-                mainAxisAlignment: homeController.state != ViewState.idle
-                    ? MainAxisAlignment.center
-                    : MainAxisAlignment.start,
+                mainAxisAlignment:
+                    homeController.state != ViewState.idle ? MainAxisAlignment.center : MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   ..._buildHomeBody(homeController, context),
@@ -39,8 +39,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildHomeBody(
-      HomeController homeController, BuildContext context) {
+  List<Widget> _buildHomeBody(HomeController homeController, BuildContext context) {
     if (homeController.state == ViewState.busy) {
       return <Widget>[
         SizedBox(
@@ -80,7 +79,7 @@ class HomePage extends StatelessWidget {
 
     return <Widget>[
       Text(
-        'E aí, ${homeController.user.name.split(' ')[0]}!!!',
+        'Olá, ${homeController.user.name.split(' ')[0]}!!!',
         style: TextStyle(
           color: AppColors.appDarkGreen,
           fontWeight: FontWeight.bold,
@@ -88,7 +87,7 @@ class HomePage extends StatelessWidget {
         ),
       ),
       Text(
-        'Você foi convidado à nossa baguncinha',
+        'Você foi convidado à contribuir com a nossa listinha',
         textAlign: TextAlign.center,
         style: TextStyle(
           color: AppColors.appDarkGreen,
@@ -113,8 +112,7 @@ class HomePage extends StatelessWidget {
         icon: FontAwesomeIcons.info,
         text: 'Informações',
         onPressed: () {
-          Navigator.pushNamed(context, GenericRouter.infoRoute,
-              arguments: true);
+          Navigator.pushNamed(context, GenericRouter.infoRoute, arguments: true);
         },
       ),
       const SizedBox(
@@ -124,8 +122,7 @@ class HomePage extends StatelessWidget {
         icon: FontAwesomeIcons.basketShopping,
         text: 'Listinha',
         onPressed: () {
-          Navigator.pushNamed(context, GenericRouter.shopRoute,
-              arguments: true);
+          Navigator.pushNamed(context, GenericRouter.shopRoute, arguments: true);
         },
       ),
       const SizedBox(
@@ -139,21 +136,51 @@ class HomePage extends StatelessWidget {
               'https://open.spotify.com/playlist/7kXnw01U038z1XtSHsa1QK?si=hPTeT8gLQO6t-2ES3UjQfQ&utm_source=whatsapp&pt=c850169fb98d1122304553804dbc42a0');
         },
       ),
+      ..._buildEmailButton(homeController, context),
       const SizedBox(
         height: 50,
       ),
       Container(
         alignment: Alignment.center,
-        width: 200,
-        height: 200,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(50.0),
-        ),
-        child: ClipOval(
-          child: Image.asset(
-            'assets/images/us_square_small.jpg',
-            filterQuality: FilterQuality.medium,
+        child: CarouselSlider(
+          options: CarouselOptions(
+            aspectRatio: 1.5,
+            autoPlay: true,
+            enlargeCenterPage: true,
+            enableInfiniteScroll: false,
           ),
+          items: [
+            ClipOval(
+              child: Image.asset(
+                'assets/images/us_square_small.jpg',
+                filterQuality: FilterQuality.medium,
+              ),
+            ),
+            ClipOval(
+              child: Image.asset(
+                'assets/images/us_square_small_2.jpg',
+                filterQuality: FilterQuality.medium,
+              ),
+            ),
+            ClipOval(
+              child: Image.asset(
+                'assets/images/us_square_small_3.jpg',
+                filterQuality: FilterQuality.medium,
+              ),
+            ),
+            ClipOval(
+              child: Image.asset(
+                'assets/images/us_square_small_4.jpg',
+                filterQuality: FilterQuality.medium,
+              ),
+            ),
+            ClipOval(
+              child: Image.asset(
+                'assets/images/us_square_small_5.jpg',
+                filterQuality: FilterQuality.medium,
+              ),
+            ),
+          ],
         ),
       ),
       const SizedBox(
@@ -167,13 +194,38 @@ class HomePage extends StatelessWidget {
           homeController.signOut().then(
             (Result result) {
               if (result.status) {
-                Navigator.pushNamedAndRemoveUntil(context,
-                    GenericRouter.loginRoute, (Route<dynamic> route) => false);
+                Navigator.pushNamedAndRemoveUntil(context, GenericRouter.loginRoute, (Route<dynamic> route) => false);
               }
             },
           );
         },
       ),
     ];
+  }
+
+  List<Widget> _buildEmailButton(HomeController homeController, BuildContext context) {
+    if (homeController.user.admin == true) {
+      return <Widget>[
+        const SizedBox(
+          height: 20,
+        ),
+        IconTextButton(
+          icon: Icons.email_outlined,
+          text: 'Email de Presença',
+          onPressed: () {
+            homeController.sendConfirmPresenceEmail().then(
+                  (Result result) => ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      behavior: SnackBarBehavior.floating,
+                      duration: const Duration(seconds: 2),
+                      content: Text(result.status ? 'Email enviado.' : 'Erro ao enviar email.'),
+                    ),
+                  ),
+                );
+          },
+        ),
+      ];
+    }
+    return <Widget>[];
   }
 }
