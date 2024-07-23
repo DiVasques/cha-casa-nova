@@ -11,3 +11,9 @@ This project was made to help us manage confirmed invitees, share our Spotify pl
   - Auth
 - Google Maps
 - Lefthook
+
+## Development:
+- LeftHook
+  - Before commiting any changes, LeftHook must be installed and activated
+  - Use `npm install lefthook --save-dev` to install
+  - Then execute `lefthook install` to activate it using the `lefthook.yml` configurations

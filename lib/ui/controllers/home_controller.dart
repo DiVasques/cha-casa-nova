@@ -1,5 +1,7 @@
 import 'package:cha_casa_nova/repository/home_repository.dart';
 import 'package:cha_casa_nova/services/authentication_services.dart';
+import 'package:cha_casa_nova/services/email_service.dart';
+import 'package:cha_casa_nova/services/models/confirm_presence_recipient.dart';
 import 'package:cha_casa_nova/services/models/result.dart';
 import 'package:cha_casa_nova/repository/models/user.dart';
 import 'package:cha_casa_nova/ui/controllers/base_controller.dart';
@@ -45,6 +47,27 @@ class HomeController extends BaseController {
       userConfirmPresence = !confirmed;
     } else {
       setErrorMessage(result.errorMessage ?? '');
+    }
+    return result;
+  }
+
+  Future<Result> sendConfirmPresenceEmail() async {
+    Result result = Result(status: true);
+
+    try {
+      List<ConfirmPresenceRecipient> recipients = await _homeRepository.getUsersToConfirmPresence();
+      for (ConfirmPresenceRecipient recipient in recipients) {
+        Result sendingResult = await EmailService.sendConfirmPresenceEmail(recipient: recipient);
+        if (!sendingResult.status) {
+          throw Exception();
+        }
+        Result updateResult = await _homeRepository.updateEmailReceived(email: recipient.email);
+        if (!updateResult.status) {
+          throw Exception();
+        }
+      }
+    } catch (e) {
+      result.status = false;
     }
     return result;
   }
