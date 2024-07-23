@@ -14,9 +14,8 @@ class ShopController extends BaseController {
 
   final List<CartItem> _cartItems = List<CartItem>.empty(growable: true);
   List<CartItem> get cartItems => _cartItems;
-  void addToCart(Item item, double newValue) {
+  void addToCart(Item item, int quantity) {
     removeFromCart(item.id);
-    int quantity = (newValue - (item.totalPieces - item.availablePieces)).round();
     if (quantity != 0) {
       cartItems.add(CartItem(
         id: item.id,

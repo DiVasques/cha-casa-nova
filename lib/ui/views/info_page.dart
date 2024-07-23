@@ -40,9 +40,8 @@ class InfoPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
-                    RichText(
-                      textAlign: TextAlign.start,
-                      text: TextSpan(
+                    Text.rich(
+                      TextSpan(
                         children: <TextSpan>[
                           TextSpan(
                             text: 'Entrega das Chaves:',
@@ -64,9 +63,8 @@ class InfoPage extends StatelessWidget {
                     const SizedBox(
                       height: 10,
                     ),
-                    RichText(
-                      textAlign: TextAlign.start,
-                      text: TextSpan(
+                    Text.rich(
+                      TextSpan(
                         children: <TextSpan>[
                           TextSpan(
                             text: 'Endereço:',

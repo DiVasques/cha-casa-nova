@@ -1,4 +1,5 @@
 import 'package:cha_casa_nova/ui/routers/generic_router.dart';
+import 'package:cha_casa_nova/ui/utils/hex_color.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cha_casa_nova/firebase_options.dart';
@@ -22,21 +23,8 @@ class ChaDeCasaNova extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Montserrat',
-        primarySwatch: const MaterialColor(
-          0xFF2D7565,
-          <int, Color>{
-            50: Color(0xFFaaf4e0),
-            100: Color(0xFF7ec7b4),
-            200: Color(0xFF61a997),
-            300: Color(0xFF438b7a),
-            400: Color(0xFF2D7565),
-            500: Color(0xFF186555),
-            600: Color(0xFF015848),
-            700: Color(0xFF004d3f),
-            800: Color(0xFF004436),
-            900: Color(0xFF003225)
-          },
-        ),
+        primaryColor: HexColor('2d7565'),
+        colorScheme: ColorScheme.fromSeed(seedColor: HexColor('2d7565')),
       ),
       onGenerateRoute: GenericRouter.generateRoute,
       initialRoute: GenericRouter.loginRoute,
